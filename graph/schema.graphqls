@@ -36,7 +36,21 @@ input newAuthor {
   name:String!
   password:String!
 }
+type RegisterResponse {
+  Id:String!
+  name:String!
+}
 
+type LoginResponse {
+  accessToken:String!
+  refreshToken:String!
+}
+ input ConfirmAuthor {
+  password:String!
+  token:String!
+}
 type Mutation {
   createNewAuthor(input:newAuthor!):Author!
+  confirmAuthor(input:confirmAuthor!):Boolean!
+
 }

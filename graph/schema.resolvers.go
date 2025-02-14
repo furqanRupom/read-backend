@@ -6,23 +6,15 @@ package graph
 
 import (
 	"context"
-	"read-backend/graph/model"
-
-	"golang.org/x/crypto/bcrypt"
+	"read-backend/graph/model"	
 )
 
 // CreateNewAuthor is the resolver for the createNewAuthor field.
 func (r *mutationResolver) CreateNewAuthor(ctx context.Context, input model.NewAuthor) (*model.Author, error) {
-	hash,error := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.DefaultCost)
-	if error != nil {
-		panic(error)
-	}
-	input.Password = string(hash)
-	author := &model.Author{
-		Name: input.Name,
-		Password: input.Password,
-	}
-	r.authors = append(r.authors, author)
+  author := &model.Author{
+    Name:"furqan",
+    Password: "abced",
+  }
 	return author, nil
 	
 }

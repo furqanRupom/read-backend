@@ -1,7 +1,7 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    queries: "/queries/query.sql"
+    queries: "/sql/query.sql"
     schema: "/atlas/schema.sql"
     gen:
       go:

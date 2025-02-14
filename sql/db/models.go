@@ -13,4 +13,5 @@ type Author struct {
 	Name     string
 	Bio      pgtype.Text
 	Password pgtype.Text
+	Email    pgtype.Text
 }
