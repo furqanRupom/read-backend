@@ -1,8 +1,8 @@
 package graphqlresolvers
 
 import (
-	// "artkelo/graphql"
-	// "artkelo/middlewares"
+	  "read-backend/graphql"
+	 "read-backend/middlewares"
 	"context"
 	"errors"
 	"net/http"

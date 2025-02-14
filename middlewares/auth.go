@@ -63,9 +63,9 @@ func SetCookies(
 	)
 }
 
-func getResponseWriterFromContext(context context.Context) any {
-	panic("unimplemented")
-}
+// func getResponseWriterFromContext(context context.Context) any {
+// 	panic("unimplemented")
+// }
 
 func AuthMiddleware(cookieConfig *config.CookieConfig, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -1,9 +1,10 @@
 package graphqlresolvers
 
 import (
-	// "artkelo/graphql"
+   "read-backend/graphql"
 	"net/mail"
 )
+
 
 func validateEmail(email string) *graphql.ErrorInvalidEmail {
 	_, err := mail.ParseAddress(email)

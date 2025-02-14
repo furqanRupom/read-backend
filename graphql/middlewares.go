@@ -1,8 +1,8 @@
-package graph
+package graphql
 
 import (
-	"artkelo/middlewares"
-	"artkelo/utils"
+	"read-backend/middlewares"
+	"read-backend/utils"
 	"context"
 	"slices"
 
