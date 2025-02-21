@@ -4,4 +4,5 @@ CREATE TABLE authors (
   bio  text
 );
 ALTER TABLE authors ADD COLUMN password TEXT;
+ALTER TABLE authors ADD COLUMN email TEXT;
 

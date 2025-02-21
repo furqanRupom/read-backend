@@ -7,10 +7,35 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const createAuthor = `-- name: CreateAuthor :one
+INSERT INTO authors (email, password)
+VALUES ($1, $2)
+RETURNING id, email
+`
+
+type CreateAuthorParams struct {
+	Email    pgtype.Text
+	Password pgtype.Text
+}
+
+type CreateAuthorRow struct {
+	ID    int64
+	Email pgtype.Text
+}
+
+func (q *Queries) CreateAuthor(ctx context.Context, arg CreateAuthorParams) (CreateAuthorRow, error) {
+	row := q.db.QueryRow(ctx, createAuthor, arg.Email, arg.Password)
+	var i CreateAuthorRow
+	err := row.Scan(&i.ID, &i.Email)
+	return i, err
+}
+
 const getAuthor = `-- name: GetAuthor :one
-SELECT id, name, bio, password FROM authors
+SELECT id, name, bio, password, email FROM authors
 WHERE id = $1 LIMIT 1
 `
 
@@ -22,12 +47,13 @@ func (q *Queries) GetAuthor(ctx context.Context, id int64) (Author, error) {
 		&i.Name,
 		&i.Bio,
 		&i.Password,
+		&i.Email,
 	)
 	return i, err
 }
 
 const listAuthors = `-- name: ListAuthors :many
-SELECT id, name, bio, password FROM authors
+SELECT id, name, bio, password, email FROM authors
 ORDER BY name
 `
 
@@ -45,6 +71,7 @@ func (q *Queries) ListAuthors(ctx context.Context) ([]Author, error) {
 			&i.Name,
 			&i.Bio,
 			&i.Password,
+			&i.Email,
 		); err != nil {
 			return nil, err
 		}

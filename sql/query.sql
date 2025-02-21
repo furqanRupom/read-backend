@@ -6,3 +6,9 @@ WHERE id = $1 LIMIT 1;
 SELECT * FROM authors
 ORDER BY name;
 
+-- name: CreateAuthor :one 
+INSERT INTO authors (email, password)
+VALUES ($1, $2)
+RETURNING id, email;
+
+

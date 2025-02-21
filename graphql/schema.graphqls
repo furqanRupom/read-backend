@@ -1,0 +1,55 @@
+directive @authenticated on FIELD_DEFINITION
+directive @admin on FIELD_DEFINITION
+
+type Author {
+  id: String!
+  name: String!
+  email: String!
+  bio: String!
+  password: String!
+}
+input newAuthor {
+  name: String!
+  email: String!
+  password: String!
+}
+type RegisterResponse {
+  Id: String!
+  name: String!
+}
+
+type LoginResponse {
+  accessToken: String!
+  refreshToken: String!
+}
+input confirmAuthor {
+  password: String!
+  token: String!
+}
+type ErrorInvalidEmail {
+  message: String!
+}
+
+type ErrorInvalidPassword {
+  message: String!
+}
+
+type ErrorInvalidUserName {
+  message: String!
+}
+
+input UserIn {
+  email: String!
+  name: String!
+  password: String!
+}
+
+union CreateUserError = ErrorInvalidEmail | ErrorInvalidUserName
+
+type Mutation {
+  createNewAuthor(input: newAuthor!): Author!
+  confirmAuthor(input: confirmAuthor!): Boolean!
+}
+type Query {
+  getAuthors(Id:String!):Author
+}
