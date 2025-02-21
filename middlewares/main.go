@@ -35,7 +35,6 @@ func CreateMiddleware(
 		},
 		Logger:    logger,
 		DBQueries: sql.New(pool),
-		SMTPDialer: mainConfig.SMTP.Dialer,
 		Redis: redisClient,
 		MainConfig: mainConfig,
 	}

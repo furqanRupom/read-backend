@@ -11,7 +11,7 @@ type DBConfig  struct {
 }
 
 
-func (c *DBConfig) toURL() string {
+func (c *DBConfig) ToURL() string {
   return fmt.Sprintf("postgresql://%s:%s@%s:%d/%s?sslmode=disable",
     c.User,
     c.Password,
@@ -29,7 +29,7 @@ func createDBConfig () DBConfig {
     Port: getEnv("POSTGRES_PORT",false,parseInt),
     User: getEnvWithoutParser("POSTGRES_USER",false),
     Database: getEnvWithoutParser("POSTGRES_DB",false),
-    Password: getEnvWithoutParser("POSGRES_PASSWORD",false),
+    Password: getEnvWithoutParser("POSTGRES_PASSWORD",false),
   }
 } 
 

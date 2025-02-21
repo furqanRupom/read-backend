@@ -8,10 +8,9 @@ type MainConfig struct {
 	Redis   RedisConfig
 	Cookie  CookieConfig
 	Server  serverConfig
-	SMTP    SMTPConfig
 }
 
-func createMainConfig() MainConfig {
+func CreateMainConfig() MainConfig {
 	return MainConfig{
 		Cookie:  createCookieConfig(),
 		Cors:    createCorsConfig(),
@@ -19,7 +18,6 @@ func createMainConfig() MainConfig {
 		Server:  createServerConfig(),
 		JWT:     createJWTConfig(),
 		Redis:   createRedisConfig(),
-		SMTP:    createSMTPConfig(),
 		Logging: createLoggingConfig(),
 	}
 }

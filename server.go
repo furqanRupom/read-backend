@@ -1,43 +1,35 @@
 package main
 
 import (
+	"read-backend/config"
+	resolvers "read-backend/graphql/resolvers"
+	middlewares "read-backend/middlewares"
+	"context"
 	"log"
 	"net/http"
-	"os"
-	"read-backend/graphql"
+	"strconv"
 
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/handler/extension"
-	"github.com/99designs/gqlgen/graphql/handler/lru"
-	"github.com/99designs/gqlgen/graphql/handler/transport"
-	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/vektah/gqlparser/v2/ast"
+	"github.com/joho/godotenv"
+	"go.uber.org/zap"
+    "github.com/99designs/gqlgen/graphql/playground"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-const defaultPort = "8080"
-
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
+	godotenv.Load()
+	mainConfig := config.CreateMainConfig()
+	logger := mainConfig.Logging.CreateLogger()
+
+	conn, err := pgxpool.New(context.Background(), mainConfig.DB.ToURL())
+	if err != nil {
+		logger.Fatal("Unable to connect to database", zap.Error(err))
 	}
+	defer conn.Close()
 
-	srv := handler.New(graphql.NewExecutableSchema(graphql.Config{Resolvers: &graphql.Resolver{}}))
-
-	srv.AddTransport(transport.Options{})
-	srv.AddTransport(transport.GET{})
-	srv.AddTransport(transport.POST{})
-
-	srv.SetQueryCache(lru.New[*ast.QueryDocument](1000))
-
-	srv.Use(extension.Introspection{})
-	srv.Use(extension.AutomaticPersistedQuery{
-		Cache: lru.New[string](100),
-	})
-
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
-
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	mux := http.NewServeMux()
+	mux.Handle("/graphql", resolvers.CreateHandler())
+	mux.Handle("/", playground.Handler("GraphQL playground", "/graphql"))
+	log.Printf("connect to http://localhost:%d/ for GraphQL playground",mainConfig.Server.Port)
+	server := middlewares.CreateMiddleware(mainConfig, logger, conn, mux)
+	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(mainConfig.Server.Port), server))
 }
